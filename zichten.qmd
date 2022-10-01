@@ -1,0 +1,120 @@
+---
+title: "Ede's Zichten consumption"
+author: Ede
+date: "`r Sys.Date()`"
+format: 
+  html:
+    self-contained: true
+code-fold: true
+execute:
+  cache: false
+engine: 
+  knitr
+---
+
+::: column-page
+
+## Introduction
+
+Follow Ede on his journey to become emission-free :-)
+
+It's pretty easy. This document is being updated once a day (around noon) with the amount of cigarettes smoked the day before. The plot below is used to track progress. 
+
+The area shaded in light green is the amount of allowed cigarettes which will be reduced by one each month (starting on the 11th of each month). The dots are the actual cigarettes smoked (green - inside allowed range, red - ouside allowed range). The thin grey dashed trend line is a simple linear regression best fit. The blue line shows weekly averages. The brown bars at the bottom indicate when a new package of tobacco was opened.
+
+
+```{r}
+#| warning: false
+#| message: false
+#| out-width: "100%"
+#| column: screen-inset-shaded
+library(googlesheets4)
+library(ggplot2)
+library(data.table)
+library(lubridate)
+library(plotly)
+
+# options(gargle_oauth_email = TRUE)
+
+sht = read_sheet(
+  "https://docs.google.com/spreadsheets/d/1UNUKMf1Zw5eryhTJLgDyp4nKmKwi_Udg_dik56dpWIA/edit#gid=0"
+)
+sht = as.data.table(sht)
+sht[, days := seq_along(n)]
+sht[, week := lubridate::week(date)]
+sht[, week_ave := round(mean(n, na.rm = TRUE), 2), by = week]
+sht[, tobacco := c(0, diff(tobacco))]
+
+
+lm1 = lm(n ~ days, data = sht)
+eta0 = round((0 - lm1$coefficients[1]) / lm1$coefficients[2], 0) - sum(!is.na(sht$n))
+eta5 = round((5 - lm1$coefficients[1]) / lm1$coefficients[2], 0) - sum(!is.na(sht$n))
+zero_date0 = Sys.Date() + eta0
+zero_date5 = Sys.Date() + eta5
+
+clr = ifelse(sht$n_max - sht$n >= 0, "#007600", "#760000")
+
+p = ggplot(
+  data = sht
+  , mapping = aes(
+    x = date
+    , y = n
+  )
+) + 
+  geom_area(
+    mapping = aes(
+      x = date
+      , y = n_max
+    )
+    , fill = "#6c936c50"
+  ) +
+  geom_bar(
+    mapping = aes(
+      x = date
+      , y = tobacco
+    )
+    , stat = "identity"
+    , fill = "#5e2f0d"
+  ) +
+  geom_line(
+    aes(x = date, y = week_ave)
+    , colour = "cornflowerblue"
+    , alpha = 0.6
+  ) +
+  geom_line(colour = "grey50") +
+  geom_point(colour = clr) +
+  geom_smooth(method = lm, colour = "grey40", se = FALSE, lty = 2, lwd = 0.5) +
+  geom_text(
+    label = sprintf(
+      "ETA (0 Zichten): %s days from today, i.e. %s"
+      , eta0
+      , zero_date0
+    )
+    , x = sht$date[11]
+    , y = 20
+  ) +
+  geom_text(
+    label = sprintf(
+      "ETA (5 Zichten): %s days from today, i.e. %s"
+      , eta5
+      , zero_date5
+    )
+    , x = sht$date[11]
+    , y = 19
+  ) +
+  ylim(c(0, 18)) +
+  scale_y_continuous(breaks = seq(0, 18, 2)) +
+  ylab("# cigarettes smoked") +
+  theme_minimal()
+
+plotly::ggplotly(p)
+```
+
+
+Using the linear regression mentioned above, we can infer when Ede will be smoke-free. 
+
+* ETA (0 Zichten): **`r eta0`** days from today, i.e. **`r zero_date0`**
+* ETA (5 Zichten): **`r eta5`** days from today, i.e. **`r zero_date5`**
+
+
+:::
