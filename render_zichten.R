@@ -1,4 +1,7 @@
 library(quarto)
 
 options(gargle_oauth_email = TRUE)
-quarto_render("zichten.qmd")
+quarto_render(
+  input = "zichten.qmd"
+  , output_file = "index.html"
+)
