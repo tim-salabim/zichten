@@ -22,6 +22,8 @@ jobs:
     - name: Install sys deps
       run: |
         sudo apt-get install libcurl4-openssl-dev
+        wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.2.167/quarto-1.2.167-linux-amd64.deb
+        sudo apt install ./quarto-1.2.167-linux-amd64.deb
     - name: Install packages
       run: |
         R -e 'install.packages("googlesheets4")'
