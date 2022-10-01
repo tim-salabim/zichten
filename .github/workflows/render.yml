@@ -19,6 +19,9 @@ jobs:
     - uses: r-lib/actions/setup-r@master
 
     # Set-up R
+    - name: Install sys deps
+      run: |
+        sudo apt-get install libcurl4-openssl-dev
     - name: Install packages
       run: |
         R -e 'install.packages("googlesheets4")'
