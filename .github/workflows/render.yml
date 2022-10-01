@@ -1,0 +1,30 @@
+name: render
+
+# Controls when the action will run.
+on:
+  schedule:
+    - cron:  '00 11 * * *'
+
+
+jobs: 
+  autoscrape:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Load repo and install R
+    steps:
+    - uses: actions/checkout@main
+    - uses: r-lib/actions/setup-r@main
+
+    # Set-up R
+    - name: Install packages
+      run: |
+        R -e 'install.packages("googlesheets4")'
+        R -e 'install.packages("ggplot2")'
+        R -e 'install.packages("data.table")'
+        R -e 'install.packages("lubridate")'
+        R -e 'install.packages("plotly")'
+        R -e 'install.packages("quarto")'
+    # Run R script
+    - name: render
+      run: Rscript render_zichten.R
