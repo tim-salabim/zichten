@@ -34,4 +34,6 @@ jobs:
         R -e 'install.packages("quarto")'
     # Run R script
     - name: render
+      env:
+        GARGLE_PASSWORD: ${{ secrets.GARGLE_PASSWORD }}
       run: Rscript render_zichten.R
