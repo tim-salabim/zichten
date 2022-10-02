@@ -38,4 +38,4 @@ jobs:
         GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
       run: |
         R -e 'print(Sys.getenv("GOOGLE_API_KEY")'
-      run: Rscript render_zichten.R
+        Rscript render_zichten.R
