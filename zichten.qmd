@@ -35,7 +35,7 @@ library(lubridate)
 library(plotly)
 
 # options(gargle_oauth_email = TRUE)
-gs4_auth()
+gs4_auth(email = "tim.appelhans@gmail.com")
 
 sht = read_sheet(
   "https://docs.google.com/spreadsheets/d/1UNUKMf1Zw5eryhTJLgDyp4nKmKwi_Udg_dik56dpWIA/edit#gid=0"
