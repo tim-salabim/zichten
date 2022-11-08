@@ -47,7 +47,7 @@ sht = as.data.table(sht)
 sht[, days := seq_along(n)]
 sht[, week := lubridate::week(date)]
 sht[, mnth := lubridate::month(date)]
-sht[, week_ave := round(mean(n, na.rm = TRUE), 2), by = mnth]
+sht[, week_ave := round(mean(n, na.rm = TRUE), 2), by = n_max]
 sht[, tobacco := c(0, diff(tobacco))]
 
 
