@@ -20,7 +20,7 @@ Follow Ede on his journey to become emission-free :-)
 
 It's pretty easy. This document is being updated once a day (around noon) with the amount of cigarettes smoked the day before. The plot below is used to track progress. 
 
-The area shaded in light green is the amount of allowed cigarettes which will be reduced by one each month (starting on the 11th of each month). The dots are the actual cigarettes smoked (green - inside allowed range, red - ouside allowed range). The thin grey dashed trend line is a simple linear regression best fit. The blue line shows weekly averages. The brown bars at the bottom indicate when a new package of tobacco was opened.
+The area shaded in light green is the amount of allowed cigarettes which will be reduced by one each month (starting on the 11th of each month). The dots are the actual cigarettes smoked (green - inside allowed range, red - ouside allowed range). The thin grey dashed trend line is a simple linear regression best fit. The blue line shows monthly averages. The brown bars at the bottom indicate when a new package of tobacco was opened.
 
 
 ```{r}
@@ -47,7 +47,7 @@ sht = as.data.table(sht)
 sht[, days := seq_along(n)]
 sht[, week := lubridate::week(date)]
 sht[, mnth := lubridate::month(date)]
-sht[, week_ave := round(mean(n, na.rm = TRUE), 2), by = n_max]
+sht[, month_ave := round(mean(n, na.rm = TRUE), 2), by = n_max]
 sht[, tobacco := c(0, diff(tobacco))]
 
 
@@ -82,31 +82,31 @@ p = ggplot(
     , fill = "#5e2f0d"
   ) +
   geom_line(
-    aes(x = date, y = week_ave)
+    aes(x = date, y = month_ave)
     , colour = "cornflowerblue"
     , alpha = 0.6
   ) +
   geom_line(colour = "grey50") +
   geom_point(colour = clr) +
   geom_smooth(method = lm, colour = "grey40", se = FALSE, lty = 2, lwd = 0.5) +
-  geom_text(
-    label = sprintf(
-      "ETA (0 Zichten): %s days from today, i.e. %s"
-      , eta0
-      , zero_date0
-    )
-    , x = sht$date[11]
-    , y = 20
-  ) +
-  geom_text(
-    label = sprintf(
-      "ETA (5 Zichten): %s days from today, i.e. %s"
-      , eta5
-      , zero_date5
-    )
-    , x = sht$date[11]
-    , y = 19
-  ) +
+  # geom_text(
+  #   label = sprintf(
+  #     "ETA (0 Zichten): %s days from today, i.e. %s"
+  #     , eta0
+  #     , zero_date0
+  #   )
+  #   , x = sht$date[11]
+  #   , y = 20
+  # ) +
+  # geom_text(
+  #   label = sprintf(
+  #     "ETA (5 Zichten): %s days from today, i.e. %s"
+  #     , eta5
+  #     , zero_date5
+  #   )
+  #   , x = sht$date[11]
+  #   , y = 19
+  # ) +
   ylim(c(0, 18)) +
   scale_y_continuous(breaks = seq(0, 18, 2)) +
   ylab("# cigarettes smoked") +
