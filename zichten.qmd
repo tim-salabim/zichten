@@ -63,13 +63,12 @@ p = ggplot(
   data = sht
   , mapping = aes(
     x = date
-    , y = n
   )
 ) + 
-  geom_area(
+  geom_ribbon(
     mapping = aes(
-      x = date
-      , y = n_max
+      ymin = 0
+      , ymax = n_max
     )
     , fill = "#6c936c50"
   ) +
@@ -86,27 +85,19 @@ p = ggplot(
     , colour = "cornflowerblue"
     , alpha = 0.6
   ) +
-  geom_line(colour = "grey50") +
-  geom_point(colour = clr) +
-  geom_smooth(method = lm, colour = "grey40", se = FALSE, lty = 2, lwd = 0.5) +
-  # geom_text(
-  #   label = sprintf(
-  #     "ETA (0 Zichten): %s days from today, i.e. %s"
-  #     , eta0
-  #     , zero_date0
-  #   )
-  #   , x = sht$date[11]
-  #   , y = 20
-  # ) +
-  # geom_text(
-  #   label = sprintf(
-  #     "ETA (5 Zichten): %s days from today, i.e. %s"
-  #     , eta5
-  #     , zero_date5
-  #   )
-  #   , x = sht$date[11]
-  #   , y = 19
-  # ) +
+  geom_line(mapping = aes(y = n), colour = "grey50") +
+  geom_point(mapping = aes(y = n), colour = clr) +
+  geom_smooth(
+    mapping = aes(
+      x = date
+      , y = n
+    )
+    , method = lm
+    , colour = "grey40"
+    , se = FALSE
+    , lty = 2
+    , lwd = 0.5
+  ) +
   ylim(c(0, 18)) +
   scale_y_continuous(breaks = seq(0, 18, 2)) +
   ylab("# cigarettes smoked") +
