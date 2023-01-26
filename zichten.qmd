@@ -87,7 +87,7 @@ p = ggplot(
     , alpha = 0.6
   ) +
   geom_line(mapping = aes(y = n), colour = "grey50") +
-  geom_point(mapping = aes(y = n), colour = clr) +
+  geom_point(mapping = aes(y = n, text = ifelse(is.na(comment), "", comment)), colour = clr) +
   geom_smooth(
     mapping = aes(
       x = date
