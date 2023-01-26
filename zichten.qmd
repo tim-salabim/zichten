@@ -34,14 +34,15 @@ library(data.table)
 library(lubridate)
 library(plotly)
 
-options(gargle_oauth_email = TRUE)
-gs4_auth(email = "tim.appelhans@gmail.com")
+# options(gargle_oauth_email = TRUE)
+# gs4_auth(email = "tim.appelhans@gmail.com")
 # gs4_auth_configure(api_key = Sys.getenv("GOOGLE_API_KEY"))
 # gs4_deauth()
 
 sht = read_sheet(
   # "https://docs.google.com/spreadsheets/d/1UNUKMf1Zw5eryhTJLgDyp4nKmKwi_Udg_dik56dpWIA/edit#gid=0"
-  "https://docs.google.com/spreadsheets/d/1UNUKMf1Zw5eryhTJLgDyp4nKmKwi_Udg_dik56dpWIA/edit?usp=sharing"
+  # "https://docs.google.com/spreadsheets/d/1UNUKMf1Zw5eryhTJLgDyp4nKmKwi_Udg_dik56dpWIA/edit?usp=sharing"
+  "https://docs.google.com/spreadsheets/d/1UNUKMf1Zw5eryhTJLgDyp4nKmKwi_Udg_dik56dpWIA/edit?usp=share_link"
 )
 sht = as.data.table(sht)
 sht[, days := seq_along(n)]
