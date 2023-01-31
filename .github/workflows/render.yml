@@ -39,7 +39,4 @@ jobs:
       run: |
         R -e 'print(Sys.getenv("GOOGLE_API_KEY"))'
         Rscript render_zichten.R
-    - name: Commit changes
-      uses: EndBug/add-and-commit@v9
-      with:
-        default_author: github_actions
+        
